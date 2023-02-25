@@ -16,6 +16,11 @@
 						</span>
 
 						<h4 class="card-title">{{ show.name }}</h4>
+						<h6 class="card-title">
+							{% for category in show.categories %}
+								<i>{{ category }}</i>{% if not loop.last %} <span class="text-muted">//</span> {% endif %}
+							{% endfor %}
+						</h6>
 					</div>
 					<div class="card-body">
 						<p>
