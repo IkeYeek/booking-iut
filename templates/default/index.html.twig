@@ -6,7 +6,7 @@
 
 	<div class="card mb-4">
 		<div class="card-header">
-			La salle de <b>DAWIN-Arena</b> est dotée de
+			La salle de <b>{{ placeName }}</b> est dotée de
 			<b>100</b> places et vous permettra de réserver vos spectacles en ligne!
 			<hr/>
 			<a href="{{ path('app_show_index') }}" class="btn btn-primary float-end">
@@ -23,14 +23,14 @@
 
 			<hr/>
 
-			<iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d866.484008439681!2d-0.6120920284114297!3d44.7905312998258!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sfr!4v1674655457720!5m2!1sen!2sfr" width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-
+			<iframe src="{{ iframeUrl }}" width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
 			<hr/>
 
 			<code>
-				DAWIN-Arena,<br/>
+				{{ placeAddress }}
+				<!--DAWIN-Arena,<br/>
 				1337 rue de DAWIN<br/>
-				33000 Bordeaux<br/>
+				33000 Bordeaux<br/>-->
 			</code>
 		</div>
 	</div>
