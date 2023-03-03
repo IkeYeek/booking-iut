@@ -8,9 +8,13 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
+use Vich\UploaderBundle\Mapping\Annotation\Uploadable;
+use Vich\UploaderBundle\Mapping\Annotation\UploadableField;
 
 #[ORM\Entity(repositoryClass: ShowRepository::class)]
 #[ORM\Table(name: '`show`')]
+#[Uploadable]
 class Show
 {
     #[ORM\Id]
@@ -32,6 +36,16 @@ class Show
 
     #[ORM\Column(type: Types::TEXT)]
     private ?string $description = null;
+
+    #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
+    private ?string $showPosterImage = null;
+
+
+    #[UploadableField(mapping: "show_poster_images", fileNameProperty: "showPosterImage")]
+    private ?File $showPosterImageFile = null;
+
+    /** @var \DateTimeImmutable|null */
+    protected $updatedAt;
 
     public function __construct()
     {
@@ -116,5 +130,31 @@ class Show
         $this->description = $description;
 
         return $this;
+    }
+
+    public function getShowPosterImage(): ?string
+    {
+        return $this->showPosterImage;
+    }
+
+    public function setShowPosterImage(?string $showPosterImage): self
+    {
+        $this->showPosterImage = $showPosterImage;
+
+        return $this;
+    }
+
+    public function setShowPosterImageFile(File $showPosterImageFile = null)
+    {
+        $this->showPosterImageFile = $showPosterImageFile;
+
+        if ($showPosterImageFile) {
+            $this->updatedAt = new \DateTimeImmutable();
+        }
+    }
+
+    public function getShowPosterImageFile()
+    {
+        return $this->showPosterImageFile;
     }
 }

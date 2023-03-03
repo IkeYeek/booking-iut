@@ -7,6 +7,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Vich\UploaderBundle\Form\Type\VichFileType;
 
 class ShowType extends AbstractType
 {
@@ -28,6 +29,12 @@ class ShowType extends AbstractType
                 'label' => 'Date de fin',
                 'widget' => 'single_text',
                 'attr' => ['step' => '1']
+            ])
+            ->add('showPosterImageFile', VichFileType::class, [
+                'required' => false,
+                'allow_delete' => true,
+                'download_uri' => true,
+                'label' => 'Show Poster Image',
             ])
             ->add('categories', null, [
                 'label' => 'Catégories'

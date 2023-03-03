@@ -14,7 +14,7 @@
 							{{ show.dateStart ? show.dateStart|date('M') : '' }}<br/>
 							{{ show.dateStart ? show.dateStart|date('Y') : '' }}
 						</span>
-
+						<img src="{{ asset("img/show_posters/#{show.showPosterImage}") }}" class="img-thumbnail" />
 						<h4 class="card-title">{{ show.name }}</h4>
 						<h6 class="card-title">
 							{% for category in show.categories %}
