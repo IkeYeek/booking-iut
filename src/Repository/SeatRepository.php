@@ -39,6 +39,15 @@ class SeatRepository extends ServiceEntityRepository
         }
     }
 
+    public function findOneByName($value): ?Seat
+    {
+        return $this->createQueryBuilder('s')
+            ->andWhere('s.name = :val')
+            ->setParameter('val', $value)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
 //    /**
 //     * @return Seat[] Returns an array of Seat objects
 //     */
@@ -63,4 +72,5 @@ class SeatRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+
 }
