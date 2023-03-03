@@ -3,9 +3,9 @@
 {% block body %}
 	<h2>Spectacles</h2>
 
-	<div class="row">
-		{% for show in shows %}
-			<div class="col-sm-4 p-2">
+	<div class="row row-cols-2">
+		{% for show in pagination %}
+			<div class="col mb-4 ">
 				<div class="card">
 					<div class="card-header">
 						<span class="badge text-bg-info float-end">
@@ -38,6 +38,9 @@
 		{% else %}
 			<div class="alert alert-warning">Aucun spectacle!</div>
 		{% endfor %}
+	</div>
+	<div class="pagination d-flex justify-content-center">
+		{{ knp_pagination_render(pagination, '@KnpPaginator/Pagination/bootstrap_v5_pagination.html.twig') }}
 	</div>
 
 	<hr/>

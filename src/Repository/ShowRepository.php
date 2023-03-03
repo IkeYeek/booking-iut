@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Show;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -39,6 +40,12 @@ class ShowRepository extends ServiceEntityRepository
         }
     }
 
+    public function findAllUpcomingShows() : array {
+        $qb = $this->findAllUpcomingShowsQuery();
+
+        return $qb->getQuery()->getResult();
+    }
+
 //    /**
 //     * @return Show[] Returns an array of Show objects
 //     */
@@ -63,4 +70,15 @@ class ShowRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+    /**
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    public function findAllUpcomingShowsQuery(): \Doctrine\ORM\QueryBuilder
+    {
+        $qb = $this->createQueryBuilder('s');
+        $qb->where('s.date_start > :now')
+            ->orderBy('s.date_start, s.id', 'ASC')
+            ->setParameter('now', new \DateTime());
+        return $qb;
+    }
 }

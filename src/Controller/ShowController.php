@@ -7,6 +7,7 @@ use App\Entity\Show;
 use App\Form\ShowType;
 use App\Repository\ShowRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,11 +17,17 @@ use Symfony\Component\Routing\Annotation\Route;
 class ShowController extends AbstractController
 {
     #[Route('/', name: 'app_show_index', methods: ['GET'])]
-    public function index(EntityManagerInterface $em, ShowRepository $showRepository): Response
+    public function index(Request $request, EntityManagerInterface $em, ShowRepository $showRepository, PaginatorInterface $paginator): Response
     {
         $configuration = $em->getRepository(Configuration::class)->findOneBy([]);
+        $shows = $showRepository->findAllUpcomingShowsQuery();
+        $pagination = $paginator->paginate(
+            $shows, /* query NOT result */
+            $request->query->getInt('page', 1), /*page number*/
+            4 /*limit per page*/
+        );
         return $this->render('show/index.html.twig', [
-            'shows' => $showRepository->findAll(),
+            'pagination' => $pagination,
             'placeName' => $configuration->getPlaceName()
         ]);
     }
