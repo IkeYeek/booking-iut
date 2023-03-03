@@ -7,10 +7,16 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Vich\UploaderBundle\Mapping\Annotation\Uploadable;
 use Vich\UploaderBundle\Mapping\Annotation\UploadableField;
+use Symfony\Component\Validator\Constraints;
+use Symfony\Component\Validator\Constraints as Assert;
+
+
 
 #[ORM\Entity(repositoryClass: ShowRepository::class)]
 #[ORM\Table(name: '`show`')]
@@ -29,6 +35,8 @@ class Show
     private ?\DateTimeInterface $date_start = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Constraints\GreaterThan(propertyPath: "date_start", message: "La date de fin doit être après la date de début")]
+
     private ?\DateTimeInterface $date_end = null;
 
     #[ORM\ManyToMany(targetEntity: Category::class, inversedBy: 'shows')]
@@ -157,4 +165,6 @@ class Show
     {
         return $this->showPosterImageFile;
     }
+
+
 }

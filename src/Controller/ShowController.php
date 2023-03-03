@@ -9,6 +9,7 @@ use App\Repository\ShowRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -48,12 +49,21 @@ class ShowController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            if ($showRepository->findShowOverlappingWith($form->getData()->getDateStart(), $form->getData()->getDateEnd())) {
+                $form->get("date_start")->addError(new FormError('Ces dates sont déjà prises !'));
+                $form->get("date_end")->addError(new FormError('Ces dates sont déjà prises !'));
+                return $this->render('show/new.html.twig', [
+                    'show' => $show,
+                    'form' => $form->createView(),
+                    'placeName' => $configuration->getPlaceName()
+                ]);
+            }
             $showRepository->save($show, true);
 
             return $this->redirectToRoute('app_show_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('show/new.html.twig', [
+        return $this->render('show/new.html.twig', [
             'show' => $show,
             'form' => $form,
             'placeName' => $configuration->getPlaceName()

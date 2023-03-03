@@ -10,10 +10,12 @@ use Doctrine\Persistence\ManagerRegistry;
 /**
  * @extends ServiceEntityRepository<Show>
  *
+ *
  * @method Show|null find($id, $lockMode = null, $lockVersion = null)
  * @method Show|null findOneBy(array $criteria, array $orderBy = null)
  * @method Show[]    findAll()
  * @method Show[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @ORM\HasLifecycleCallbacks()
  */
 class ShowRepository extends ServiceEntityRepository
 {
@@ -70,9 +72,7 @@ class ShowRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
-    /**
-     * @return \Doctrine\ORM\QueryBuilder
-     */
+
     public function findAllUpcomingShowsQuery(): \Doctrine\ORM\QueryBuilder
     {
         $qb = $this->createQueryBuilder('s');
@@ -81,4 +81,16 @@ class ShowRepository extends ServiceEntityRepository
             ->setParameter('now', new \DateTime());
         return $qb;
     }
+
+    public function findShowOverlappingWith(DateTime $startDate, DateTime $endDate): array
+    {
+        $qb = $this->createQueryBuilder('s')
+            ->where('s.date_start <= :end')
+            ->andWhere('s.date_end >= :start')
+            ->setParameter('start', $startDate)
+            ->setParameter('end', $endDate);
+
+        return $qb->getQuery()->getResult();
+    }
+
 }
