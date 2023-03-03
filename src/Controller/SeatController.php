@@ -17,8 +17,15 @@ use Symfony\Component\Routing\Annotation\Route;
 class SeatController extends AbstractController
 {
     #[Route('/', name: 'app_seat_index', methods: ['GET', 'POST'])]
-    public function index(Request $request, EntityManagerInterface $em): Response
+    public function index() {
+        die();
+        return "";
+    }
+    #[Route('/edit', name: 'app_seat_edit', methods: ['GET', 'POST'])]
+    public function update_seats(Request $request, EntityManagerInterface $em): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'Vous devez être administrateur pour accéder à cette page.');
+
         function getCellIndex(int $cols, int $currentRow, int $currentCol): string {
             $letter = chr(ord('A') + ($currentCol ) % $cols);
             $row = $currentRow + 1;
@@ -31,7 +38,6 @@ class SeatController extends AbstractController
             'seat_per_rows' => 8
         ]);
         $form->handleRequest($request);
-        $curr = "A1";
         if ($form->isSubmitted() && $form->isValid()) {
             $repo = $em->getRepository(Seat::class);
             $data = $form->getData();

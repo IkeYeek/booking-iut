@@ -32,6 +32,10 @@ class RegistrationController extends AbstractController
                 )
             );
 
+            if (!$em->getRepository(User::class)->hasAnyUser()) {
+                $user->setRoles(["ROLE_ADMIN"]);
+            }
+
             $em->persist($user);
             $em->flush();
             // do anything else you need here, like send an email

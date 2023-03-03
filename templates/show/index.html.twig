@@ -30,7 +30,7 @@
 					<div class="card-footer">
 						<td>
                             <a class="btn btn-primary float-start" href="{{ path('app_show_map') }}">plan</a>
-							<a class="btn btn-primary float-end" href="{{ path('app_show_edit', {'id': show.id}) }}">éditer</a>
+							{% if is_granted('ROLE_ADMIN') %}<a class="btn btn-primary float-end" href="{{ path('app_show_edit', {'id': show.id}) }}">éditer</a>{% endif %}
 						</td>
 					</div>
 				</div>

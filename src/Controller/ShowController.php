@@ -43,6 +43,8 @@ class ShowController extends AbstractController
     #[Route('/new', name: 'app_show_new', methods: ['GET', 'POST'])]
     public function new(Request $request, ShowRepository $showRepository, EntityManagerInterface $em): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'Vous devez être administrateur pour accéder à cette page.');
+
         $configuration = $em->getRepository(Configuration::class)->findOneBy([]);
         $show = new Show();
         $form = $this->createForm(ShowType::class, $show);
@@ -73,6 +75,8 @@ class ShowController extends AbstractController
     #[Route('/{id}/edit', name: 'app_show_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Show $show, ShowRepository $showRepository, EntityManagerInterface $em): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'Vous devez être administrateur pour accéder à cette page.');
+
         $configuration = $em->getRepository(Configuration::class)->findOneBy([]);
         $form = $this->createForm(ShowType::class, $show);
         $form->handleRequest($request);
@@ -93,6 +97,8 @@ class ShowController extends AbstractController
     #[Route('/{id}', name: 'app_show_delete', methods: ['POST'])]
     public function delete(Request $request, Show $show, ShowRepository $showRepository): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'Vous devez être administrateur pour accéder à cette page.');
+
         if ($this->isCsrfTokenValid('delete'.$show->getId(), $request->request->get('_token'))) {
             $showRepository->remove($show, true);
         }
