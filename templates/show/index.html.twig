@@ -8,9 +8,10 @@
 			<div class="col mb-4 ">
 				<div class="card">
 					<div class="card-header">
+						<p class="text-muted">{{ totalPlaces - show.remainingPlaces() }} places restantes.</p>
 						<span class="badge text-bg-info float-end">
 							<big>{{ show.dateStart ? show.dateStart|date('d') : '' }}</big>
-							<br/>
+							<br/>s
 							{{ show.dateStart ? show.dateStart|date('M') : '' }}<br/>
 							{{ show.dateStart ? show.dateStart|date('Y') : '' }}
 						</span>

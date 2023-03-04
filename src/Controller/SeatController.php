@@ -32,7 +32,8 @@ class SeatController extends AbstractController
             return $letter . $row;
         }
 
-        $configuration = $em->getRepository(Configuration::class)->findOneBy([]);
+        $configurationRepo = $em->getRepository(Configuration::class);
+        $configuration = $configurationRepo->findOneBy([]);
         $form = $this->createForm(GenerateSeatsFormType::class, [
             'rows' => 8,
             'seat_per_rows' => 8
@@ -41,6 +42,8 @@ class SeatController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $repo = $em->getRepository(Seat::class);
             $data = $form->getData();
+            $configuration->setNbSeatsPerRow($data["seat_per_rows"]);
+            $configuration->setNbRows($data["rows"]);
             for ($i = 0; $i < $data["rows"]; $i += 1) {
                 for ($j = 0; $j < $data["seat_per_rows"]; $j += 1) {
                     $seatName = getCellIndex($data["seat_per_rows"], $i, $j);

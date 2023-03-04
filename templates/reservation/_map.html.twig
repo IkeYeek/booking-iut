@@ -54,7 +54,6 @@
             }
 
             const updatePlacesList = () => {
-                //  Of course this could be made way better, by not refreshing the whole list every times. It would ask me to make some more coffee though and I think I'm gettint closer to the lethal limit so let's keep this
                 selectedPlacesList.innerHTML = "";
                 if (selectedTds.length === 0) {
                     selectedPlacesList.innerHTML = "Aucune";
@@ -95,7 +94,7 @@
                     } else {
                         selectedTds.push(target);
                         target.classList.add("selected-place");
-                        const item = [...reservationSeatsInput.children].find(e => e.innerHTML === target.innerHTML)  // Terrible performances but it's too late for performances
+                        const item = [...reservationSeatsInput.children].find(e => e.innerHTML === target.innerHTML)
                         console.log(item)
                         item.selected = true;
                         updatePlacesList();

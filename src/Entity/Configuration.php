@@ -25,6 +25,12 @@ class Configuration
     #[ORM\Column]
     private ?float $longitude = null;
 
+    #[ORM\Column]
+    private int $nbRows;
+
+    #[ORM\Column]
+    private int $nbSeatsPerRow;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -74,6 +80,34 @@ class Configuration
     public function setLongitude(float $longitude): self
     {
         $this->longitude = $longitude;
+
+        return $this;
+    }
+
+    public function getNbRows(): ?int
+    {
+        return $this->nbRows;
+    }
+
+    public function setNbRows(int $nbRows): self
+    {
+        $this->nbRows = $nbRows;
+
+        return $this;
+    }
+
+    public function getNbSeats(): ?int {
+        return $this->nbRows * $this->nbSeatsPerRow;
+    }
+
+    public function getNbSeatsPerRow(): ?int
+    {
+        return $this->nbSeatsPerRow;
+    }
+
+    public function setNbSeatsPerRow(int $nbSeatsPerRow): self
+    {
+        $this->nbSeatsPerRow = $nbSeatsPerRow;
 
         return $this;
     }

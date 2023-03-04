@@ -32,7 +32,8 @@ class ShowController extends AbstractController
         );
         return $this->render('show/index.html.twig', [
             'pagination' => $pagination,
-            'placeName' => $configuration->getPlaceName()
+            'placeName' => $configuration->getPlaceName(),
+            'totalPlaces' => $configuration->getNbSeats()
         ]);
     }
 

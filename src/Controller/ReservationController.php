@@ -37,7 +37,7 @@ class ReservationController extends AbstractController
         $reservation->setUser($this->getUser());
 
         // Create the form
-        $form = $this->creatvareForm(ReservationType::class, $reservation);
+        $form = $this->createForm(ReservationType::class, $reservation);
         $form->handleRequest($request);
         $maybeResa = $reservationRepo->findReservationFrom($this->getUser(), $show);
         if($maybeResa) {

@@ -202,10 +202,17 @@ class Show
         return $this;
     }
 
+    public function remainingPlaces(): int {
+        return $this->getReservations()->reduce(function($acc, $val) {
+            return $acc + $val->getSeats()->count();
+        }, 0);
+    }
+
     public function __toString(): string
     {
         return $this->getName();
     }
+
 
 
 }
