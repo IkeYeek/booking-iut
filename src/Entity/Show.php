@@ -55,12 +55,18 @@ class Show
     /** @var \DateTimeImmutable|null */
     protected $updatedAt;
 
+    #[ORM\OneToMany(mappedBy: 'correspondingShow', targetEntity: Reservation::class)]
+    private Collection $reservations;
+
+
+
     public function __construct()
     {
         $this->categories = new ArrayCollection();
 
         $this->date_start = new DateTime('now');
         $this->date_end = new DateTime('now +1hours');
+        $this->reservations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -164,6 +170,41 @@ class Show
     public function getShowPosterImageFile()
     {
         return $this->showPosterImageFile;
+    }
+
+    /**
+     * @return Collection<int, Reservation>
+     */
+    public function getReservations(): Collection
+    {
+        return $this->reservations;
+    }
+
+    public function addReservation(Reservation $reservation): self
+    {
+        if (!$this->reservations->contains($reservation)) {
+            $this->reservations->add($reservation);
+            $reservation->setCorrespondingShow($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReservation(Reservation $reservation): self
+    {
+        if ($this->reservations->removeElement($reservation)) {
+            // set the owning side to null (unless already changed)
+            if ($reservation->getCorrespondingShow() === $this) {
+                $reservation->setCorrespondingShow(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->getName();
     }
 
 

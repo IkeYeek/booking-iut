@@ -27,8 +27,8 @@ class SeatController extends AbstractController
         $this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'Vous devez être administrateur pour accéder à cette page.');
 
         function getCellIndex(int $cols, int $currentRow, int $currentCol): string {
-            $letter = chr(ord('A') + ($currentCol ) % $cols);
-            $row = $currentRow + 1;
+            $letter = chr(ord('A') + ($currentRow ) % $cols);
+            $row = $currentCol + 1;
             return $letter . $row;
         }
 
@@ -43,7 +43,7 @@ class SeatController extends AbstractController
             $data = $form->getData();
             for ($i = 0; $i < $data["rows"]; $i += 1) {
                 for ($j = 0; $j < $data["seat_per_rows"]; $j += 1) {
-                    $seatName = getCellIndex($data["seat_per_rows"], $i, $j) . "\n";
+                    $seatName = getCellIndex($data["seat_per_rows"], $i, $j);
                     $seat = new Seat();
                     $seat->setName($seatName);
                     if ($repo->findOneByName($seatName) === null) {

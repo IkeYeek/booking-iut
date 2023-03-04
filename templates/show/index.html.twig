@@ -14,7 +14,9 @@
 							{{ show.dateStart ? show.dateStart|date('M') : '' }}<br/>
 							{{ show.dateStart ? show.dateStart|date('Y') : '' }}
 						</span>
-						<img src="{{ asset("img/show_posters/#{show.showPosterImage}") }}" class="img-thumbnail" />
+						{% if show.showPosterImage is not null %}
+							<img src="{{ asset("img/show_posters/#{show.showPosterImage}") }}" class="img-thumbnail" />
+						{% endif %}
 						<h4 class="card-title">{{ show.name }}</h4>
 						<h6 class="card-title">
 							{% for category in show.categories %}
@@ -28,9 +30,10 @@
 						</p>
 					</div>
 					<div class="card-footer">
-						<td>
-                            <a class="btn btn-primary float-start" href="{{ path('app_show_map') }}">plan</a>
-							{% if is_granted('ROLE_ADMIN') %}<a class="btn btn-primary float-end" href="{{ path('app_show_edit', {'id': show.id}) }}">éditer</a>{% endif %}
+						<td class="d-flex justify-content-between">
+                            <a class="btn btn-primary flex-grow-1 me-2" href="{{ path('app_show_map') }}">plan</a>
+                            {% if is_granted('ROLE_USER') %}<a class="btn btn-primary  flex-grow-1 me-2" href="{{ path('app_show_book', {'id': show.id}) }}">réservation</a> {% endif %}
+							{% if is_granted('ROLE_ADMIN') %}<a class="btn btn-primary  flex-grow-1 me-2" href="{{ path('app_show_edit', {'id': show.id}) }}">éditer</a>{% endif %}
 						</td>
 					</div>
 				</div>
@@ -45,5 +48,5 @@
 
 	<hr/>
 
-	<a class="btn btn-success" href="{{ path('app_show_new') }}">Ajouter</a>
+	{% if is_granted('ROLE_ADMIN') %}<a class="btn btn-success" href="{{ path('app_show_new') }}">Ajouter</a>{% endif %}
 {% endblock %}

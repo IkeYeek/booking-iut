@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {% apply inline_css %}
+        <style>
+            .curr-show-container {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+            #curr-show-poster {
+                height: 250px;
+                width: fit-content;
+            }
+            #reservation .mb-3:not(:first-child) {
+                display: none;
+            }
+        </style>
+        <div class="curr-show-container">
+            <h2>Prendre une réservation pour: </h2>
+            {% if show.showPosterImage is not null %}
+                <img id="curr-show-poster" src="{{ asset("img/show_posters/#{show.showPosterImage}") }}"/>
+            {% endif %}
+            <h3>{{ show.getName() }}, le {{ show.getDateStart().format('d/m/Y à H:i') }}</h3>
+            {{ form_start(form) }}
+            {{ form_widget(form) }}
+            {{ include('reservation/_map.html.twig', {'button_label': 'Update'}) }}
+            <button class="btn btn-success" style="width: 80vw">Réserver</button>
+            {{ form_end(form) }}
+        </div>
+    {% endapply %}
+{% endblock %}

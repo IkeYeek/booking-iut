@@ -3,7 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Configuration;
+use App\Entity\Reservation;
+use App\Entity\Seat;
 use App\Entity\Show;
+use App\Form\ReservationType;
 use App\Form\ShowType;
 use App\Repository\ShowRepository;
 use Doctrine\ORM\EntityManagerInterface;

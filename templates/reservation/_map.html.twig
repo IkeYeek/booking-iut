@@ -1,0 +1,109 @@
+{% apply inline_css %}
+    <!-- Am I using twig as close as I would use a component frontend framework ? Maybe maybe not -->
+    <style>
+        .hovered-place, .selected-place {
+            background-color: rgba(128, 128, 128, 0.5) !important;
+        }
+        .clicked-place-flash {
+            background-color: rgba(0, 0, 0, 0.5) !important;
+        }
+
+        td:hover {
+            cursor: pointer;
+        }
+
+        #selectedPlacesList {
+            list-style-type: none;
+            display: flex;
+        }
+    </style>
+    <h2>Plan des places</h2>
+    <div class="alert alert-info">
+        Sur ce plan, il est possible de consulter l'occupation des places pour ce spectacle!
+        Les cases occupées sont affichées en opacité réduite.
+    </div>
+    <table id="map" class="table table-striped">
+        <tr>
+            <td colspan="8" class="text-center">
+                <h4>Scène</h4>
+            </td>
+        </tr>
+        {% for crow in 0..roomInfos.rows-1 %}
+            <tr>
+                {% for seatI in 0..roomInfos.seatsPerRow-1 %}
+                    <td {% if not functions.isAvailable(crow, seatI) %}class="opacity-25"{% endif %}>{{ functions.getCellIndex(crow, seatI) }}</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </table>
+    <p>Places séléctionnées: </p>
+    <ul id="selectedPlacesList">
+     Aucune
+    </ul>
+    <script>
+        const main = () => {
+            const map = document.querySelector("#map");
+            const selectedPlacesList = document.querySelector("#selectedPlacesList");
+            let selectedTds = [];
+            const allTds = [...document.querySelectorAll("#map tr:not(:first-child) td")];
+            const allFreeTds = allTds.filter(td => !td.classList.contains("opacity-25"));
+            const reservationSeatsInput = document.querySelector("#reservation_seats");
+            reservationSeatsInput.onchange = (evt) => {
+                const target = evt.target;
+                console.log(target)
+            }
+
+            const updatePlacesList = () => {
+                //  Of course this could be made way better, by not refreshing the whole list every times. It would ask me to make some more coffee though and I think I'm gettint closer to the lethal limit so let's keep this
+                selectedPlacesList.innerHTML = "";
+                if (selectedTds.length === 0) {
+                    selectedPlacesList.innerHTML = "Aucune";
+                }
+                for (let i = 0; i < selectedTds.length; i += 1) {
+                    if (i > 0) {
+                        const tiret = document.createElement("li");
+                        tiret.innerText = "-";
+                        selectedPlacesList.appendChild(tiret);
+                    }
+                    const name = document.createElement("li");
+                    name.innerText = selectedTds[i].innerText;
+                    selectedPlacesList.appendChild(name);
+                }
+            }
+
+            allFreeTds.forEach(td => {
+                td.onmouseover = (mouseOverEvt) => {
+                    const target = mouseOverEvt.target;
+                    target.classList.add("hovered-place");
+                }
+                td.onmouseout = (mouseOutEvt) => {
+                    const target = mouseOutEvt.target;
+                    target.classList.remove("hovered-place");
+                }
+                td.onmousedown = (mouseDownEvt) => {
+                    const target = mouseDownEvt.target;
+                    target.classList.add("clicked-place-flash")
+                }
+                td.onmouseup = (mouseClickEvt) => {
+                    const target = mouseClickEvt.target;
+                    target.classList.remove("clicked-place-flash")
+
+                    if (selectedTds.includes(target)) {
+                        selectedTds = selectedTds.filter(v => v !== target);
+                        target.classList.remove("selected-place")
+                        updatePlacesList();
+                    } else {
+                        selectedTds.push(target);
+                        target.classList.add("selected-place");
+                        const item = [...reservationSeatsInput.children].find(e => e.innerHTML === target.innerHTML)  // Terrible performances but it's too late for performances
+                        console.log(item)
+                        item.selected = true;
+                        updatePlacesList();
+                    }
+                }
+            });
+        }
+
+        document.body.onload = main;
+    </script>
+{% endapply %}
