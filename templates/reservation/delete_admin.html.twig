@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {% apply inline_css %}
+        <style>
+            .reservation-infos-wrapper {
+                display: flex;
+            }
+
+            #reservation-places {
+                list-style-type: none;
+                display: flex;
+            }
+
+            #reservation-places li {
+                margin-left: 15px;
+                background-color: rgba(178, 175, 175, 0.37);
+                padding: 1rem;
+                border-radius: 25%;
+            }
+            #reservation_edit_main {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                justify-content: center;
+            }
+            #delete_main {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+        </style>
+        <div id="delete_main">
+            <div id="reservation_edit_main">
+                <h2>Réservation pour {{ show.name }} le {{ show.getDateStart().format('d/m/Y à H:i') }}</h2>
+                <p>Réservation au nom &quot;{{ reservation.getNom() }}&quot; ({{ reservation.getUser().getEmail() }})</p>
+                <div class="reservation-infos-wrapper">
+                    <h5>Places réservées: </h5>
+                    <ul id="reservation-places">
+                        {% for place in places %}
+                            <li>{{ place }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <form action="#" method="POST">
+                    <input type="hidden" name="token" value="{{ csrf_token('delete-item') }}"/>
+                    <button class="btn btn-danger">Supprimer la réservation</button>
+                </form>
+            </div>
+        </div>
+    {% endapply %}
+{% endblock %}

@@ -42,13 +42,14 @@ class ShowController extends AbstractController
     {
         $configuration = $em->getRepository(Configuration::class)->findOneBy([]);
         $seatsRepo = $em->getRepository(Seat::class);
-        $functions = new class($seatsRepo, $configuration->getNbSeatsPerRow(), $show) {
+        $functions = new class($seatsRepo, $configuration->getNbSeatsPerRow(), $show, $this->getUser()) {
             private $seatsRepo;
-            public function __construct($seatsRepo, $nbSeatsPerRows, $show)
+            public function __construct($seatsRepo, $nbSeatsPerRows, $show, $user)
             {
                 $this->seatsRepo = $seatsRepo;
                 $this->nbSeatsPerRows = $nbSeatsPerRows;
                 $this->show = $show;
+                $this->user = $user;
             }
 
             function getCellIndex($currentRow, $currentCol): string {
@@ -66,6 +67,14 @@ class ShowController extends AbstractController
             function isAvailable($row, $seat) {
                 $name = $this->getCellIndex($row, $seat);
                 return $this->isAvailableByName($name);
+            }
+
+            function getResaID($row, $seat) {
+                $name = $this->getCellIndex($row, $seat);
+                $t = $this->show->getReservations()->findFirst(function($key, $value) {
+                    return $value->getUser() === $this->user;
+                });
+                return $t->getId();
             }
         };
         return $this->render('show/map.html.twig', ['placeName' => $configuration->getPlaceName(), 'roomInfos' => [

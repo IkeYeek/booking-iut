@@ -15,7 +15,7 @@
         {% for crow in 0..roomInfos.rows-1 %}
             <tr>
                 {% for seatI in 0..roomInfos.seatsPerRow-1 %}
-                    <td {% if not functions.isAvailable(crow, seatI) %}class="opacity-25"{% endif %}>{{ functions.getCellIndex(crow, seatI) }}</td>
+                    <td {% if not functions.isAvailable(crow, seatI) %}class="opacity-25"{% endif %}>{% if not functions.isAvailable(crow, seatI)  and is_granted("ROLE_ADMIN") %}<a href="{{ path("admin_edit_resa", {'id': functions.getResaID(crow, seatI)}) }}">{% endif %}{{ functions.getCellIndex(crow, seatI) }}{% if not functions.isAvailable(crow, seatI and is_granted("ROLE_ADMIN")) %}</a>{% endif %}</td>
                 {% endfor %}
             </tr>
         {% endfor %}
