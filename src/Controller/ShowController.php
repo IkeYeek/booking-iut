@@ -37,11 +37,42 @@ class ShowController extends AbstractController
         ]);
     }
 
-    #[Route('/map', name: 'app_show_map', methods: ['GET'])]
-    public function map(EntityManagerInterface $em)
+    #[Route('/{id}/map', name: 'app_show_map', methods: ['GET'])]
+    public function map(EntityManagerInterface $em, Show $show)
     {
         $configuration = $em->getRepository(Configuration::class)->findOneBy([]);
-        return $this->render('show/map.html.twig', ['placeName' => $configuration->getPlaceName()]);
+        $seatsRepo = $em->getRepository(Seat::class);
+        $functions = new class($seatsRepo, $configuration->getNbSeatsPerRow(), $show) {
+            private $seatsRepo;
+            public function __construct($seatsRepo, $nbSeatsPerRows, $show)
+            {
+                $this->seatsRepo = $seatsRepo;
+                $this->nbSeatsPerRows = $nbSeatsPerRows;
+                $this->show = $show;
+            }
+
+            function getCellIndex($currentRow, $currentCol): string {
+                $letter = chr(ord('A') + ($currentRow ) % $this->nbSeatsPerRows);
+                $row = $currentCol + 1;
+                return $letter . $row;
+            }
+
+            function isAvailableByName($name) {
+                $seat = $this->seatsRepo->findOneByName($name);
+                if ($seat === null) return false;
+                return !$seat->hasAnyReservationFor($this->show);
+            }
+
+            function isAvailable($row, $seat) {
+                $name = $this->getCellIndex($row, $seat);
+                return $this->isAvailableByName($name);
+            }
+        };
+        return $this->render('show/map.html.twig', ['placeName' => $configuration->getPlaceName(), 'roomInfos' => [
+            'rows' => $configuration->getNbRows(),
+            'seatsPerRow' => $configuration->getNbSeatsPerRow(),
+
+        ], 'functions' => $functions,]);
     }
 
     #[Route('/new', name: 'app_show_new', methods: ['GET', 'POST'])]

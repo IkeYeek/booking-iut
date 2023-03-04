@@ -32,7 +32,7 @@
 					</div>
 					<div class="card-footer">
 						<td class="d-flex justify-content-between">
-                            <a class="btn btn-primary flex-grow-1 me-2" href="{{ path('app_show_map') }}">plan</a>
+                            <a class="btn btn-primary flex-grow-1 me-2" href="{{ path('app_show_map', {'id': show.id}) }}">plan</a>
                             {% if is_granted('ROLE_USER') %}<a class="btn btn-primary  flex-grow-1 me-2" href="{{ path('app_show_book', {'id': show.id}) }}">réservation</a> {% endif %}
 							{% if is_granted('ROLE_ADMIN') %}<a class="btn btn-primary  flex-grow-1 me-2" href="{{ path('app_show_edit', {'id': show.id}) }}">éditer</a>{% endif %}
 						</td>
