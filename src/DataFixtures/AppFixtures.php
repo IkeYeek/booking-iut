@@ -16,6 +16,8 @@ class AppFixtures extends Fixture
         $configuration->setPlaceAddress("Av. René Monory, 86360 Chasseneuil-du-Poitou");
         $configuration->setLongitude(46.666473);
         $configuration->setLatitude(0.367548);
+        $configuration->setNbRows(0);
+        $configuration->setNbSeatsPerRow(0);
         $manager->persist($configuration);
 
         $categoryNames = [
