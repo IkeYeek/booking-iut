@@ -154,17 +154,17 @@ class Show
     public function setShowPosterImage(?string $showPosterImage): self
     {
         $this->showPosterImage = $showPosterImage;
-
+        $this->updatedAt = new \DateTimeImmutable();
         return $this;
     }
 
     public function setShowPosterImageFile(File $showPosterImageFile = null)
     {
-        $this->showPosterImageFile = $showPosterImageFile;
-
         if ($showPosterImageFile) {
+            $this->showPosterImageFile = $showPosterImageFile;
             $this->updatedAt = new \DateTimeImmutable();
         }
+        return $this;
     }
 
     public function getShowPosterImageFile()

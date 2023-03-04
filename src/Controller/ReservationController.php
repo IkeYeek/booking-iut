@@ -45,9 +45,7 @@ class ReservationController extends AbstractController
         }
 
 
-        $nbRows = 8;
-        $nbSeatsPerRows = 8;
-        $function = new class($seatsRepo, $nbSeatsPerRows, $show) {
+        $function = new class($seatsRepo, $configuration->getNbSeatsPerRow(), $show) {
             private $seatsRepo;
             public function __construct($seatsRepo, $nbSeatsPerRows, $show)
             {
@@ -107,8 +105,8 @@ class ReservationController extends AbstractController
             'show' => $show,
             'placeName' => $configuration->getPlaceName(),
             'roomInfos' => [
-                'rows' => $nbRows,
-                'seatsPerRow' => $nbSeatsPerRows
+                'rows' => $configuration->getNbRows(),
+                'seatsPerRow' => $configuration->getNbSeatsPerRow()
             ],
             'functions' => $function,
             'places' => $places
@@ -142,6 +140,16 @@ class ReservationController extends AbstractController
     public function admin_edit(Request $request, Reservation $reservation, EntityManagerInterface $em) {
         $this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'Vous devez être connecté');
         $configuration = $em->getRepository(Configuration::class)->findOneBy([]);
+        $reservationRepo = $em->getRepository(Reservation::class);
+        if ($request->getMethod() == "POST") {
+            $submittedToken = $request->request->get('token');
+            if ($this->isCsrfTokenValid('delete-item', $submittedToken)) {
+                $reservationRepo->remove($reservation, true);
+            }
+            return $this->render("reservation/delete_success.html.twig", [
+                'placeName' => $configuration->getPlaceName(),
+            ]);
+        }
         return $this->render('reservation/delete_admin.html.twig', [
             'placeName' => $configuration->getPlaceName(),
             'show' => $reservation->getCorrespondingShow(),

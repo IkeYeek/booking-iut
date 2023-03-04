@@ -130,7 +130,7 @@ class ShowController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $showRepository->save($show, true);
-
+            $em->flush();
             return $this->redirectToRoute('app_show_index', [], Response::HTTP_SEE_OTHER);
         }
 
