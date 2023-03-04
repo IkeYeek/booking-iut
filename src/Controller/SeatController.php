@@ -16,12 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/seat')]
 class SeatController extends AbstractController
 {
-    #[Route('/', name: 'app_seat_index', methods: ['GET', 'POST'])]
-    public function index() {
-        die();
-        return "";
-    }
-    #[Route('/edit', name: 'app_seat_edit', methods: ['GET', 'POST'])]
+    #[Route('/edit', name: 'app_seat_index', methods: ['GET', 'POST'])]
     public function update_seats(Request $request, EntityManagerInterface $em): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'Vous devez être administrateur pour accéder à cette page.');
