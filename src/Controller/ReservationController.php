@@ -140,7 +140,7 @@ class ReservationController extends AbstractController
 
     #[Route('/{id}/admin', name: 'admin_edit_resa', methods: ['GET', 'POST'])]
     public function admin_edit(Request $request, Reservation $reservation, EntityManagerInterface $em) {
-        $this->denyAccessUnlessGranted('ROLE_USER', null, 'Vous devez être connecté');
+        $this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'Vous devez être connecté');
         $configuration = $em->getRepository(Configuration::class)->findOneBy([]);
         return $this->render('reservation/delete_admin.html.twig', [
             'placeName' => $configuration->getPlaceName(),

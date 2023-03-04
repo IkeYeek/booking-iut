@@ -71,9 +71,12 @@ class ShowController extends AbstractController
 
             function getResaID($row, $seat) {
                 $name = $this->getCellIndex($row, $seat);
-                $t = $this->show->getReservations()->findFirst(function($key, $value) {
-                    return $value->getUser() === $this->user;
+                $t = $this->show->getReservations()->findFirst(function($key, $value) use($name) {
+                    return $value->getSeats()->exists(function($key, $value) use($name) {
+                       return $value->getName() === $name;
+                    });
                 });
+
                 return $t->getId();
             }
         };
